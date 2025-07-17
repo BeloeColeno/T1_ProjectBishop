@@ -10,7 +10,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 @Configuration
 @EnableAspectJAutoProxy
 public class AuditConfig {
-    @Value("${weyland.audit.kafka.topic:weyland-audit}")
+    @Value("${weyland.audit.kafka.topic:weyland-audit-topic}")
     private String auditTopic;
 
     @Bean
