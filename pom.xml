@@ -26,7 +26,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.5.3</version> <!-- используйте нужную версию Spring Boot -->
+                <version>3.5.3</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -52,6 +52,7 @@
     </build>
 
     <properties>
+        <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
