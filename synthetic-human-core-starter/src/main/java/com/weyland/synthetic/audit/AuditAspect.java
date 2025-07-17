@@ -1,21 +1,19 @@
 package com.weyland.synthetic.audit;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 @Aspect
+@Slf4j
+@RequiredArgsConstructor
 public class AuditAspect {
-    private static final Logger logger = Logger.getLogger(AuditAspect.class.getName());
     private final KafkaAuditSender kafkaSender;
-
-    public AuditAspect(KafkaAuditSender kafkaSender) {
-        this.kafkaSender = kafkaSender;
-    }
 
     @Around("@annotation(weylandWatchingYou)")
     public Object auditMethod(ProceedingJoinPoint joinPoint, WeylandWatchingYou weylandWatchingYou) throws Throwable {
@@ -30,6 +28,7 @@ public class AuditAspect {
             Object result = joinPoint.proceed();
 
             String successMessage = "Method " + methodName + " completed successfully with result: " + (result != null ? result.toString() : "null");
+
             logAudit(successMessage, weylandWatchingYou.mode());
 
             return result;
@@ -42,7 +41,7 @@ public class AuditAspect {
 
     private void logAudit(String message, WeylandWatchingYou.AuditMode mode) {
         if (mode == WeylandWatchingYou.AuditMode.CONSOLE) {
-            logger.info("[AUDIT] " + message);
+            log.info("[AUDIT] " + message);
         } else if (mode == WeylandWatchingYou.AuditMode.KAFKA) {
             kafkaSender.sendAuditMessage(message);
         }

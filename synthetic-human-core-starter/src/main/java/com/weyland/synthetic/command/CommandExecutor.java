@@ -1,16 +1,18 @@
 package com.weyland.synthetic.command;
 
 import com.weyland.synthetic.error.CommandQueueFullException;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
+@Slf4j
 public class CommandExecutor {
-    private static final Logger logger = Logger.getLogger(CommandExecutor.class.getName());
 
+    @Getter
     private final ThreadPoolExecutor executor;
     private final int queueCapacity;
 
@@ -33,14 +35,14 @@ public class CommandExecutor {
     }
 
     private void executeImmediately(CommandModel command) {
-        logger.info("Executing critical command from " + command.getAuthor() + ": " + command.getDescription());
+        log.info("Executing critical command from " + command.getAuthor() + ": " + command.getDescription());
         // Тут как бы что-то делается
     }
 
     private void enqueueCommand(CommandModel command) {
         try {
             executor.execute(() -> {
-                logger.info("Executing common command from " + command.getAuthor() + ": " + command.getDescription());
+                log.info("Executing common command from " + command.getAuthor() + ": " + command.getDescription());
                 // Тут тоже что-то делается
             });
         } catch (RejectedExecutionException e) {
