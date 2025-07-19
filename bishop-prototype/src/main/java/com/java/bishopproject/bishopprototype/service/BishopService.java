@@ -15,7 +15,13 @@ public class BishopService {
     private final SyntheticMetrics syntheticMetrics;
 
     @WeylandWatchingYou(mode = WeylandWatchingYou.AuditMode.CONSOLE)
-    public void processCommand(CommandModel command) {
+    public void processCommandConsole(CommandModel command) {
+        commandExecutor.executeCommand(command);
+        syntheticMetrics.incrementTasksCompletedForAuthor(command.getAuthor());
+    }
+
+    @WeylandWatchingYou(mode = WeylandWatchingYou.AuditMode.KAFKA)
+    public void processCommandKafka(CommandModel command) {
         commandExecutor.executeCommand(command);
         syntheticMetrics.incrementTasksCompletedForAuthor(command.getAuthor());
     }
