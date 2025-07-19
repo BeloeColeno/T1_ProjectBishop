@@ -7,6 +7,8 @@ import com.weyland.synthetic.monitoring.SyntheticMetrics;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class BishopService {
@@ -26,7 +28,11 @@ public class BishopService {
         syntheticMetrics.incrementTasksCompletedForAuthor(command.getAuthor());
     }
 
+    public Map<String, Integer> getTasksCompletedByAuthor() {
+        return syntheticMetrics.getTasksCompletedByAuthor();
+    }
+
     public int getCurrentQueueSize() {
-        return commandExecutor.getCurrentQueueSize();
+        return syntheticMetrics.getCurrentQueueSize();
     }
 }
