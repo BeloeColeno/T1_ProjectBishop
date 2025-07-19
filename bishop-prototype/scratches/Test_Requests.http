@@ -1,0 +1,125 @@
+### Create a new entity with kafka audit
+POST http://localhost:8080/api/commands/kafka-audit
+Content-Type: application/json
+
+{
+  "description": "Анализ образцов инопланетной формы жизни",
+  "priority": "COMMON",
+  "author": "Доктор Элизабет Шоу",
+  "time": "2025-07-19T14:35:00.000Z"
+}
+
+### Another entity with kafka audit
+POST http://localhost:8080/api/commands/kafka-audit
+Content-Type: application/json
+
+{
+"description": "Поиск инопланетного корабля",
+"priority": "CRITICAL",
+"author": "Доктор Элизабет Шоу",
+"time": "2025-07-19T15:23:00.000Z"
+}
+
+### Create a new entity with console audit
+POST http://localhost:8080/api/commands/console-audit
+Content-Type: application/json
+
+{
+  "description": "Проверка систем жизнеобеспечения",
+  "priority": "CRITICAL",
+  "author": "Лейтенант Эллен Рипли",
+  "time": "2025-07-19T14:30:00.000Z"
+}
+
+### Get the current queue size of commands
+GET http://localhost:8080/monitoring/queue-size
+Accept: application/json
+
+### Get tasks completed by author statistics
+GET http://localhost:8080/monitoring/tasks-completed
+Accept: application/json
+
+### Test error handling - Command with invalid priority
+POST http://localhost:8080/api/commands/console-audit
+Content-Type: application/json
+
+{
+  "description": "Тестирование обработки ошибок",
+  "priority": "INVALID_PRIORITY",
+  "author": "Инженер Бишоп",
+  "time": "2025-07-19T15:00:00.000Z"
+}
+
+### Test error handling - Command with too long description (>1000 symbols)
+POST http://localhost:8080/api/commands/console-audit
+Content-Type: application/json
+
+{
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+  "priority": "COMMON",
+  "author": "Инженер Бишоп",
+  "time": "2025-07-19T15:10:00.000Z"
+}
+
+### Test error handling - Command with too long author name (>100 symbols)
+POST http://localhost:8080/api/commands/console-audit
+Content-Type: application/json
+
+{
+  "description": "Тестирование длины автора",
+  "priority": "COMMON",
+  "author": "Очень очень очень очень очень очень очень очень очень очень очень очень очень очень очень очень очень длинное имя автора",
+  "time": "2025-07-19T15:20:00.000Z"
+}
+
+### Test error handling - Command with invalid time format
+POST http://localhost:8080/api/commands/console-audit
+Content-Type: application/json
+
+{
+  "description": "Тестирование формата даты",
+  "priority": "COMMON",
+  "author": "Инженер Бишоп",
+  "time": "19-07-2025"
+}
+
+### Add multiple commands to fill queue - Critical command (executes immediately)
+POST http://localhost:8080/api/commands/console-audit
+Content-Type: application/json
+
+{
+  "description": "Критическое действие #1",
+  "priority": "CRITICAL",
+  "author": "Капитан Даллас",
+  "time": "2025-07-19T15:30:00.000Z"
+}
+
+### Add multiple commands to fill queue - Common command #1 (goes to queue)
+POST http://localhost:8080/api/commands/console-audit
+Content-Type: application/json
+
+{
+  "description": "Обычное действие #1",
+  "priority": "COMMON",
+  "author": "Офицер Кейн",
+  "time": "2025-07-19T15:31:00.000Z"
+}
+
+### Add multiple commands to fill queue - Common command #2 (goes to queue)
+POST http://localhost:8080/api/commands/console-audit
+Content-Type: application/json
+
+{
+  "description": "Обычное действие #2",
+  "priority": "COMMON",
+  "author": "Офицер Кейн",
+  "time": "2025-07-19T15:32:00.000Z"
+}
+
+### Check queue size again after adding multiple commands
+GET http://localhost:8080/monitoring/queue-size
+Accept: application/json
+
+### Check tasks completed statistics after adding multiple commands
+GET http://localhost:8080/monitoring/tasks-completed
+Accept: application/json
