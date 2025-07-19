@@ -4,7 +4,7 @@ import com.weyland.synthetic.audit.AuditAspect;
 import com.weyland.synthetic.audit.KafkaAuditSender;
 import com.weyland.synthetic.command.CommandExecutor;
 import com.weyland.synthetic.monitoring.SyntheticMetrics;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -41,9 +41,8 @@ public class SyntheticHumanAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SyntheticMetrics syntheticMetrics(CommandExecutor commandExecutor) {
-        SimpleMeterRegistry registry = new SimpleMeterRegistry();
-        SyntheticMetrics metrics = new SyntheticMetrics(registry, commandExecutor);
+    public SyntheticMetrics syntheticMetrics(CommandExecutor commandExecutor, MeterRegistry meterRegistry) {
+        SyntheticMetrics metrics = new SyntheticMetrics(meterRegistry, commandExecutor);
         metrics.initMetrics();
         return metrics;
     }
