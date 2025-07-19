@@ -8,6 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class CommandExecutor {
@@ -15,6 +16,10 @@ public class CommandExecutor {
     @Getter
     private final ThreadPoolExecutor executor;
     private final int queueCapacity;
+
+    private final AtomicInteger totalTasksExecuted = new AtomicInteger(0);
+
+    private final AtomicInteger activeTasksCount = new AtomicInteger(0);
 
     public CommandExecutor(int corePoolSize, int maxPoolSize, int queueCapacity) {
         this.queueCapacity = queueCapacity;
@@ -27,6 +32,8 @@ public class CommandExecutor {
     }
 
     public void executeCommand(CommandModel command) {
+        activeTasksCount.incrementAndGet();
+
         if (command.getPriority() == CommandModel.CommandPriority.CRITICAL) {
             executeImmediately(command);
         } else {
@@ -37,21 +44,32 @@ public class CommandExecutor {
     private void executeImmediately(CommandModel command) {
         log.info("Executing critical command from " + command.getAuthor() + ": " + command.getDescription());
         // Тут как бы что-то делается
+        totalTasksExecuted.incrementAndGet();
+        activeTasksCount.decrementAndGet();
     }
 
     private void enqueueCommand(CommandModel command) {
         try {
             executor.execute(() -> {
-                log.info("Executing common command from " + command.getAuthor() + ": " + command.getDescription());
-                // Тут тоже что-то делается
+                try {
+                    log.info("Executing common command from " + command.getAuthor() + ": " + command.getDescription());
+                    // Тут тоже что-то делается
+                } finally {
+                    totalTasksExecuted.incrementAndGet();
+                    activeTasksCount.decrementAndGet();
+                }
             });
         } catch (RejectedExecutionException e) {
+            activeTasksCount.decrementAndGet();
             throw new CommandQueueFullException("Command queue is full. Maximum capacity: " + queueCapacity);
         }
     }
 
     public int getCurrentQueueSize() {
-        return executor.getQueue().size();
+        return activeTasksCount.get();
     }
 
+    public int getTotalTasksExecuted() {
+        return totalTasksExecuted.get();
+    }
 }
