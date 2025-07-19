@@ -1,0 +1,8 @@
+### GET All metrics
+GET http://localhost:8080/actuator/metrics
+
+### GET Specific metric - queue size
+GET http://localhost:8080/actuator/metrics/synthetic.tasks.queue.size
+
+### GET Specific metric - tasks completed
+GET http://localhost:8080/actuator/metrics/synthetic.tasks.completed
