@@ -15,11 +15,16 @@ public class CommandController {
 
     private final BishopService bishopService;
 
-    @PostMapping
-    @WeylandWatchingYou(mode = WeylandWatchingYou.AuditMode.KAFKA)
-    public ResponseEntity<String> submitCommand(@Valid @RequestBody CommandModel command) {
-        bishopService.processCommand(command);
-        return ResponseEntity.ok("Command submitted successfully");
+    @PostMapping("/console-audit")
+    public ResponseEntity<String> processCommandConsole(@Valid @RequestBody CommandModel command) {
+        bishopService.processCommandConsole(command);
+        return ResponseEntity.ok("Команда обработана с аудитом в консоль");
+    }
+
+    @PostMapping("/kafka-audit")
+    public ResponseEntity<String> processCommandKafka(@Valid @RequestBody CommandModel command) {
+        bishopService.processCommandKafka(command);
+        return ResponseEntity.ok("Команда обработана с аудитом в Kafka");
     }
 
     @GetMapping("/queue-size")
