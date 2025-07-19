@@ -4,25 +4,20 @@ services:
     image: bitnami/kafka:3.4.0
     container_name: kafka
     ports:
-      - "9092:9092"
+      - "9092:9092"  # Порт для приложения
+      - "19092:19092"  # Порт для kafka-ui
+      - "29093:29093"  # Контроллерный порт
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:29093
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:29093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=EXTERNAL://0.0.0.0:9092,UI://0.0.0.0:19092,CONTROLLER://0.0.0.0:29093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=EXTERNAL://localhost:9092,UI://kafka:19092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=EXTERNAL:PLAINTEXT,UI:PLAINTEXT,CONTROLLER:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_CFG_GROUP_INITIAL_REBALANCE_DELAY_MS=0
-      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=1
-      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
-      - KAFKA_CFG_LOG_DIRS:=/tmp/kraft-combined-logs
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=EXTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
-      - KAFKA_KRAFT_CLUSTER_ID=LelPDQEzRHOMeSS9iKPKPg
-    volumes:
-      - kafka_data:/bitnami/kafka
     networks:
       - bishop-network
 
@@ -35,13 +30,10 @@ services:
       - "8090:8080"
     environment:
       - KAFKA_CLUSTERS_0_NAME=weyland-cluster
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:19092
     networks:
       - bishop-network
 
-volumes:
-  kafka_data:
-    driver: local
 
 networks:
   bishop-network:
