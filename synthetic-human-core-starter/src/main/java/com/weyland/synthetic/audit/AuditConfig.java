@@ -10,17 +10,17 @@ import org.springframework.kafka.core.KafkaTemplate;
 @Configuration
 @EnableAspectJAutoProxy
 public class AuditConfig {
-    @Value("${weyland.audit.kafka.topic:weyland-audit-topic}")
+    @Value("${synthetic.weyland.audit.kafka.topic:weyland-audit-topic}")
     private String auditTopic;
 
     @Bean
-    @ConditionalOnProperty(name = "weyland.audit.kafka.enabled", havingValue = "true")
+    @ConditionalOnProperty(name = "synthetic.weyland.audit.kafka.enabled", havingValue = "true")
     public KafkaAuditSender kafkaAuditSender(KafkaTemplate<String, String> kafkaTemplate) {
         return new KafkaAuditSender(auditTopic, kafkaTemplate);
     }
 
     @Bean
-    @ConditionalOnProperty(name = "weyland.audit.kafka.enabled", havingValue = "false", matchIfMissing = true)
+    @ConditionalOnProperty(name = "synthetic.weyland.audit.kafka.enabled", havingValue = "false", matchIfMissing = true)
     public KafkaAuditSender consoleAuditSender() {
         return new KafkaAuditSender("console", null);
     }
