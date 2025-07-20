@@ -1,11 +1,8 @@
 package com.weyland.synthetic.monitoring;
 
-import com.weyland.synthetic.command.CommandExecutor;
-import com.weyland.synthetic.worker.SyntheticWorkersPool;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
