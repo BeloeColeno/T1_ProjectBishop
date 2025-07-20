@@ -28,9 +28,9 @@ mvn clean install
    - Эти ручки отправляют команды в Kafka и консоль соответственно. В теле запроса нужно указать JSON с полями:
 ```json
 {
-  "description": "description", (>1000 символов)
+  "description": "description", (!>1000 символов)
   "priority": "COMMON | CRITICAL",
-  "author": "author", (>100 символов)
+  "author": "author", (!>100 символов)
   "time": "YYYY-MM-DDTHH:MM:SS.sssZ" (JSON формат даты)
 }
 ```
