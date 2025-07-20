@@ -44,14 +44,4 @@ public class ValidationUtils {
 
         return errors;
     }
-
-    /* Надо убрать
-    public static void validateCommandOrThrow(CommandModel command) {
-        Map<String, String> errors = validateCommand(command);
-
-        if (!errors.isEmpty()) {
-            String firstError = errors.values().iterator().next();
-            throw new IllegalArgumentException(firstError);
-        }
-    }*/
 }
