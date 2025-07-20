@@ -46,9 +46,4 @@ public class CommandController {
         bishopService.processCommandKafka(command);
         return ResponseEntity.ok("Команда обработана с аудитом в Kafka");
     }
-
-    @GetMapping("/queue-size")
-    public ResponseEntity<Integer> getQueueSize() {
-        return ResponseEntity.ok(bishopService.getCurrentQueueSize());
-    }
 }
